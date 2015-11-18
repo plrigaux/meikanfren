@@ -44,3 +44,7 @@ jettyRun {
 	scanIntervalSeconds = 2
 	daemon = false
 }
+
+task stage {
+   dependsOn installDist
+}
