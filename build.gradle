@@ -46,5 +46,5 @@ jettyRun {
 }
 
 task stage {
-   dependsOn installDist
+   dependsOn build
 }
