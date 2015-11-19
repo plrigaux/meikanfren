@@ -15,6 +15,10 @@ ratpack {
         }
 		*/
 		
+		get("/") {
+			render('index.html')
+		}
+		
 		get ("en/fr/:word", new ENFRTranslate())
 		
 		get ("fr/en/:word", new FRENTranslate())
