@@ -16,34 +16,21 @@ import com.plr.TransType
 
 abstract class MyServlet implements Handler {
 
-	protected String encoding = "UTF-8";
+	static final String ENCODING = "UTF-8";
 	
-	void init(ServletConfig config) {
-		println "ExampleServlet initialized"
-	}
-
 	abstract TransType getTransType()
-	
+
+	static Pizza2 piz = new Pizza2()
+		
 	public void handle(Context context) {
 		
 		Request request = context.getRequest();
 
-
 		def content = doContent()
 		
 		def word = context.getPathTokens().get("word")
-/*
-		def uri = request.getUri()
-
-		def word = uri.split('/')[-1]
-*/
-		
-		//def context = request.getContextPath();
-		//def path = request.getPathInfo();
-		//println "<path href='${path}/ --  ${context}'>"
 		
 		
-		def piz = new Pizza2()
 
 		content = piz.make_get_request(word, getTransType())
 		//println val
@@ -63,14 +50,8 @@ ${content}
 """
 		
 		Response response = context.getResponse()
-
 		
-		//response.setContentType();
-		//response.setCharacterEncoding(encoding)
-		
-		response.contentType("text/html; charset=" + encoding)
-		response.send(out)
-		//response.getWriter().write( out )
+		response.contentType("text/html; charset=" + ENCODING).send(out)
 	}
 	
 	def doContent() {

@@ -15,8 +15,10 @@ ratpack {
         }
 		*/
 		
-		get("/") {
-			render('index.html')
+		get("") {
+			
+			//context.response.status(301).send('Location: index.html ')
+			redirect "/index.html"
 		}
 		
 		get ("en/fr/:word", new ENFRTranslate())
