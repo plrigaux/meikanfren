@@ -49,7 +49,7 @@ public class Pizza2Test extends spock.lang.Specification {
 		//def doc = new XmlSlurper().parseText(xmlString)
 
 
-		pizza.cleanSubNode(doc)
+		pizza.cleanSubNode(doc, TransType.ENFR)
 
 		println XmlUtil.serialize(doc)
 
@@ -66,7 +66,7 @@ public class Pizza2Test extends spock.lang.Specification {
 		doc = pizza.getSubNode(doc)
 
 
-		pizza.cleanSubNode(doc)
+		pizza.cleanSubNode(doc, TransType.ENFR)
 
 		println XmlUtil.serialize(doc)
 
