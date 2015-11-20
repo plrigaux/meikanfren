@@ -38,7 +38,7 @@ public class Pizza2Test extends spock.lang.Specification {
 		doc != null
 	}
 
-	def "clean xml"() {
+	def "clean_xml"() {
 		given: "a new Adder class is created"
 		def pizza = new Pizza2();
 
@@ -46,32 +46,24 @@ public class Pizza2Test extends spock.lang.Specification {
 
 		def doc = pizza.parse xmlString
 
-		//def doc = new XmlSlurper().parseText(xmlString)
-
-
-		pizza.cleanSubNode(doc, TransType.ENFR)
+		PageProcessor.TRANSLATION.clean(doc, TransType.ENFR)
 
 		println XmlUtil.serialize(doc)
 
 	}
-	
-	def "parse and clean xml"() {
+
+	def "parse_and_clean_xml"() {
 		given: "a new Adder class is created"
 		def pizza = new Pizza2();
 
 		String xmlString = this.getClass().getResource( '/paper.html' ).text
 
 		def doc = pizza.parse xmlString
-		
-		doc = pizza.getSubNode(doc)
 
-
-		pizza.cleanSubNode(doc, TransType.ENFR)
+		doc = pizza.getCleanSubNode(doc, TransType.ENFR)
 
 		println XmlUtil.serialize(doc)
-
 	}
-
 
 	def "clean word"() {
 		given: "a new Adder class is created"

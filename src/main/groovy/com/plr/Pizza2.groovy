@@ -8,11 +8,13 @@ import groovyx.net.http.Method
 
 import org.ccil.cowan.tagsoup.Parser
 
+import com.sun.prism.j2d.PrismPrintGraphics.PagePresentable;
+
 class Pizza2 {
 	static void main(String[] args) {
 
 		def piz = new Pizza2()
-		piz.make_get_request("paper clip")
+		piz.constructOutput("paper clip")
 		println "Pizza2"
 	}
 
@@ -39,129 +41,50 @@ class Pizza2 {
 
 		String data = getData(word, type)
 
+		return constructOutput(word, type, data)
+	}
+
+	String constructOutput(String word, TransType type, String data) {
 
 		def doc = parse data
 
-		doc = getSubNode(doc, type)
+		NodePage np = getSubNode(doc, type)
 
-		String val = doc == null ? "NULL" : XmlUtil.serialize(doc).substring('<?xml version="1.0" encoding="UTF-8"?>'.size())
+		np.clean(np.node)
 
-		return val
+		def param = [
+			word: word,
+			lang: "fr"
+		]
+
+		String output = np.generateOutPut(param)
+
+		return output
 	}
 
-	NodeChild getSubNode(NodeChild doc, TransType type) {
+	NodePage getSubNode(NodeChild doc, TransType type) {
 
-		def subNode = doc.depthFirst().find {
+		NodeChild subNode = doc.depthFirst().find {
 			it.name() == 'div' && it.@class == 'article_bilingue'
 		}
 
-
+		PageProcessor pp = null;
 		if (subNode) {
-			cleanSubNode subNode, type
+			pp = PageProcessor.TRANSLATION
 		} else {
 			subNode = doc.depthFirst().find {
 				it.name() == 'section' && it.@class == 'corrector'
 			}
-
-			cleanSubNodeCorrector (subNode, type)
+			pp = subNode ? PageProcessor.ALTERNATIVES : PageProcessor.NOFOUND
 		}
 
-		return subNode
+		NodePage np = new NodePage(pp: pp, node: subNode, type: type);
+
+		return np
 	}
 
 
-	void cleanSubNodeCorrector(NodeChild subNode, TransType type) {
 
-		if (subNode == null) {
-			return;
-		}
-
-		def nodes = subNode.depthFirst().findAll {
-			it.name() == 'a'
-		}
-
-		subNode.replaceNode {
-			ul() {
-				nodes.each { anode ->
-					li {
-						String hr = anode.@href
-						hr = type.getUrlPrefix() + hr.split('/').last()
-						a(href: hr, anode.text())
-					}
-				}
-			}
-		}
-	}
-
-
-	def final keysToRemove = ["id", "href", "shape"]
-
-	void cleanSubNode(NodeChild subNode, TransType type) {
-
-		if (subNode == null) {
-			return;
-		}
-
-		subNode.'**'.find {
-			it.name() == 'h1' && it.@class == 'TitrePage'
-		}.each {
-			// remove <h1 class="TitrePage">Traduction de ****</h1>
-
-			if (it.@class == 'TitrePage') {
-				it.replaceNode {}
-			} else {
-				it.replaceNode {
-					h2(it.attributes(), it.text() )
-				}
-			}
-		}
-
-		subNode.'**'.findAll {
-			it.name() == 'br'
-		}.each {
-			it.attributes().clear()
-		}
-
-		subNode.'**'.findAll {
-			it.name() == 'a'
-		}.each {
-
-			String txt = it.text().trim().toLowerCase()
-
-			//println "txt '" + txt + "'"
-
-			switch ( txt ) {
-				case "conjugaison":
-				case "":
-				case "&nbsp;":
-				case " ":
-					it.replaceNode {
-
-					}
-					break
-				default:
-
-					def newMap = it.attributes().findAll({!keysToRemove.contains(it.key)})
-					it.replaceNode {
-						span(newMap, it.text() )
-					}
-			}
-		}
-
-		def anodes = subNode.'**'.findAll {
-			it.attributes().containsKey("lang")
-		}.each {
-			Map<String, String> attrs = it.attributes()
-
-			//println attrs.keySet()
-			String lang = attrs["lang"]
-			attrs.remove("{http://www.w3.org/XML/1998/namespace}lang")
-
-			//transfor the FRA to fr and ANG to en
-			attrs["lang"] = lang.toLowerCase().startsWith("fr") ? "fr" : "en"
-
-		}
-	}
 
 	String getData(String word, TransType type) {
 		def http = new HTTPBuilder()

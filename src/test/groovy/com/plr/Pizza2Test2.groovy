@@ -14,7 +14,7 @@ public class Pizza2Test2 extends spock.lang.Specification {
 
 		def doc = pizza.parse xmlString
 
-		doc = pizza.getSubNode(doc, TransType.FREN)
+		doc = pizza.getCleanSubNode(doc, TransType.FREN)
 
 println doc
 		//pizza.cleanSubNode(doc)
