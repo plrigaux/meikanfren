@@ -36,7 +36,7 @@ abstract class MyServlet implements Handler {
 		//println val
 		def out = """\
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 	<base href="/">
 	<meta charset='utf-8' />
