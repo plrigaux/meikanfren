@@ -7,3 +7,7 @@ document.onkeydown = function() {
 		submitForm();
 	}
 }
+
+function setFocusToTextBox(){
+    document.getElementById("word").focus();
+}
