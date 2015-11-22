@@ -48,60 +48,7 @@ jettyRun {
 }
 */
 task stage {
+println "stage this app!!!"
    dependsOn installDist
 }
 
-
-
-
-
-
-
-
-/*
- 
-
-
-
-// Apply the groovy plugin to add support for Groovy
-apply plugin: 'groovy'
-apply plugin: 'eclipse'
-apply plugin: 'war'
-apply plugin: 'jetty'
-
-// In this section you declare where to find the dependencies of your project
-repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-}
-
-// In this section you declare the dependencies for your production and test code
-dependencies {
-    
-	providedCompile 'javax.servlet:servlet-api:2.5'
-	compile 'org.codehaus.groovy:groovy-all:2.4.4'
-	compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-	compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
-
-    // We use the awesome Spock testing and specification framework
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'junit:junit:4.12'
-}
-
-
-task plr << {
-	println 'plr plr!!'
-}
-
-jettyRun {
-	httpPort = 8080
-	reload = 'automatic'
-	scanIntervalSeconds = 2
-	daemon = false
-}
-
-task stage {
-   dependsOn build
-}
-*/
