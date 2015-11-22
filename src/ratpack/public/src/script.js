@@ -1,5 +1,5 @@
 function submitForm() {
-	window.location = transtype + document.getElementById("word").value
+	document.translate.submit();
 }
 
 document.onkeydown = function() {

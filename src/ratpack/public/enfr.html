@@ -5,15 +5,14 @@
 <title>Dictionaire Anglais - Français</title>
 <link rel="stylesheet" type="text/css" href="src/style.css">
 <script type="text/javascript" src="src/script.js"></script>
-<script>
-	var transtype = "en/fr/"
-</script>
 </head>
 <body onload='setFocusToTextBox()'>
 	<h1>Dictionaire Anglais - Français</h1>
+	<form name="translate" action="trans_enfr" method="get">
 		<label>Entrez un mot ou une expression anglaise <br /> <input
-			type="text" id="word" value="" /></label> <input type="button"
-			value="Soumettre" onclick="submitForm()" />
+			type="text" id="word" name="word" value="" /></label> 
+			<input type="submit" value="Soumettre"  />
+	</form>
 	<br />
 	<a href="fren.html">Allez cherchez un mot français</a>
 

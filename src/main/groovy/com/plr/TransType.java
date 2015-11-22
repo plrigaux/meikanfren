@@ -6,7 +6,7 @@ import groovyx.net.http.URIBuilder;
 
 public enum TransType {
 
-	ENFR("anglais-francais", "en/fr/"), FREN("francais-anglais", "fr/en/");
+	ENFR("anglais-francais", "trans_enfr"), FREN("francais-anglais", "trans_fren");
 
 	private final String url;
 	private final String dico;

@@ -4,6 +4,7 @@ apply plugin: 'war'
 apply plugin: "io.ratpack.ratpack-groovy"
 apply plugin: "idea"
 
+mainClassName = "com.plr.Main"
 
 // In this section you declare where to find the dependencies of your project
 buildscript {

@@ -7,8 +7,8 @@ class NodePage  {
 	NodeChild node;
 	TransType type;
 
-	public void clean(NodeChild subNode) {
-		pp.getCleaner().clean(subNode, type)
+	public void clean() {
+		pp.getCleaner().clean(node, type)
 	}
 
 	public String generateOutPut(Map <String, Object> params) {

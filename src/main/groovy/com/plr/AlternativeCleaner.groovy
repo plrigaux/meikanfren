@@ -22,7 +22,7 @@ class AlternativeCleaner extends GenOutput implements CleanerInt {
 				nodes.each { anode ->
 					li {
 						String hr = anode.@href
-						hr = type.getUrlPrefix() + hr.split('/').last()
+						hr = type.getUrlPrefix() +  "?word=" + hr.split('/').last()
 						a(href: hr, anode.text())
 					}
 				}

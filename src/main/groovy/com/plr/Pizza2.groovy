@@ -35,20 +35,24 @@ class Pizza2 {
 
 	String make_get_request(String word, TransType type) {
 
-		word = cleanWord(word)
+		NodeChild doc = null;
 
-		String data = getData(word, type)
+		if (word) {
+			word = cleanWord(word)
 
-		return constructOutput(word, type, data)
+			String data = getData(word, type)
+
+			doc = parse data
+		}
+
+		return constructOutput(word, type, doc)
 	}
 
-	String constructOutput(String word, TransType type, String data) {
-
-		def doc = parse data
+	String constructOutput(String word, TransType type, NodeChild doc) {
 
 		NodePage np = getSubNode(doc, type)
 
-		np.clean(np.node)
+		np.clean()
 
 		def param = [
 			word: word,
@@ -61,22 +65,25 @@ class Pizza2 {
 	}
 
 	NodePage getSubNode(NodeChild doc, TransType type) {
-
-		NodeChild subNode = doc.depthFirst().find {
-			it.name() == 'div' && it.@class == 'article_bilingue'
-		}
-
-		PageProcessor pp = null;
-		if (subNode) {
-			pp = PageProcessor.TRANSLATION
-		} else {
-			subNode = doc.depthFirst().find {
-				it.name() == 'section' && it.@class == 'corrector'
+		NodePage np;
+		if (doc) {
+			NodeChild subNode = doc.depthFirst().find {
+				it.name() == 'div' && it.@class == 'article_bilingue'
 			}
-			pp = subNode ? PageProcessor.ALTERNATIVES : PageProcessor.NOFOUND
-		}
 
-		NodePage np = new NodePage(pp: pp, node: subNode, type: type);
+			PageProcessor pp = null;
+			if (subNode) {
+				pp = PageProcessor.TRANSLATION
+			} else {
+				subNode = doc.depthFirst().find {
+					it.name() == 'section' && it.@class == 'corrector'
+				}
+				pp = subNode ? PageProcessor.ALTERNATIVES : PageProcessor.NOFOUND
+			}
+			np = new NodePage(pp: pp, node: subNode, type: type);
+		} else {
+			np = new NodePage(pp: PageProcessor.NOFOUND, node: null, type: type);
+		}
 
 		return np
 	}

@@ -28,9 +28,7 @@ abstract class MyServlet implements Handler {
 
 		def content = doContent()
 		
-		def word = context.getPathTokens().get("word")
-		
-		
+		def word = context.getRequest().getQueryParams().get("word")
 
 		content = piz.make_get_request(word, getTransType())
 		//println val
