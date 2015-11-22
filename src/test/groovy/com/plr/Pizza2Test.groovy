@@ -48,8 +48,7 @@ public class Pizza2Test extends spock.lang.Specification {
 
 		NodePage np = pizza.getSubNode(doc, TransType.ENFR)
 		
-		np.clean(np.node)
-		
+		np.clean()
 		
 		println XmlUtil.serialize(np.node)
 
@@ -65,11 +64,9 @@ public class Pizza2Test extends spock.lang.Specification {
 
 		NodePage np = pizza.getSubNode(doc, TransType.ENFR)
 		
-		np.clean(np.node)
-		
+		np.clean()
 		
 		println XmlUtil.serialize(np.node)
-
 	}
 
 	def "clean word"() {

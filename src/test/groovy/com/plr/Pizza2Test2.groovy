@@ -14,14 +14,11 @@ public class Pizza2Test2 extends spock.lang.Specification {
 
 		def doc = pizza.parse xmlString
 
-				NodePage np = pizza.getSubNode(doc, TransType.ENFR)
-		
-		np.clean(np.node)
-		
-		
+		NodePage np = pizza.getSubNode(doc, TransType.ENFR)
+
+		np.clean()
+
+
 		println XmlUtil.serialize(np.node)
-
-
-		
 	}
 }

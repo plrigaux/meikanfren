@@ -35,6 +35,12 @@ class Pizza2 {
 
 	String make_get_request(String word, TransType type) {
 
+		NodeChild doc = getNodeChild( word, type)
+
+		return constructOutput(word, type, doc)
+	}
+
+	NodeChild getNodeChild(String word, TransType type) {
 		NodeChild doc = null;
 
 		if (word) {
@@ -44,8 +50,6 @@ class Pizza2 {
 
 			doc = parse data
 		}
-
-		return constructOutput(word, type, doc)
 	}
 
 	String constructOutput(String word, TransType type, NodeChild doc) {

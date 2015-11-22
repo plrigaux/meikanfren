@@ -1,6 +1,6 @@
 package com.plr;
 
-import groovy.xml.XmlUtil
+import groovy.util.slurpersupport.NodeChild
 
 
 public class TestTemplate extends spock.lang.Specification {
@@ -26,8 +26,16 @@ public class TestTemplate extends spock.lang.Specification {
 		def pizza = new Pizza2();
 
 		String xmlString = this.getClass().getResource( '/paper.html' ).text
+	
 		
-		def out = pizza.constructOutput("paper", TransType.ENFR, xmlString)
+		String word = "paper"
+		
+		TransType type = TransType.ENFR
+		
+		NodeChild doc = pizza.getNodeChild(word, type)
+		
+		def out = pizza.constructOutput(word, type, doc)
+		
 		
 		println out
 	}
@@ -41,7 +49,13 @@ public class TestTemplate extends spock.lang.Specification {
 
 		String xmlString = this.getClass().getResource( '/traink.html' ).text
 		
-		def out = pizza.constructOutput("traink", TransType.ENFR, xmlString)
+		String word = "traink"
+		
+		TransType type = TransType.ENFR
+		
+		NodeChild doc = pizza.getNodeChild(word, type)
+		
+		def out = pizza.constructOutput(word, type, doc)
 		
 		println out
 	}
@@ -53,9 +67,14 @@ public class TestTemplate extends spock.lang.Specification {
 		
 		def pizza = new Pizza2();
 
-		String xmlString = "asdf"
+		String word = "train"
 		
-		def out = pizza.constructOutput("train", TransType.ENFR, xmlString)
+		TransType type = TransType.ENFR
+		
+		NodeChild doc = pizza.getNodeChild(word, type)
+		
+		def out = pizza.constructOutput(word, type, doc)
+		
 		
 		println out
 	}
