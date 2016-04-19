@@ -1,8 +1,9 @@
 package com.plr;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
-import groovyx.net.http.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 
 public enum TransType {
 
@@ -26,14 +27,14 @@ public enum TransType {
 		return urlPrefix;
 	}
 
-	public String buildUrl(String word) throws URISyntaxException {
+	public URI buildUrl(String word) throws URISyntaxException {
 		URIBuilder builder = new URIBuilder("http://www.larousse.fr");
 		builder.setPath("/dictionnaires/rechercher");
-		builder.addQueryParam("q", word);
-		builder.addQueryParam("l", dico);
-		builder.addQueryParam("culture", ""); // to be consistant
+		builder.addParameter("q", word);
+		builder.addParameter("l", dico);
+		builder.addParameter("culture", ""); // to be consistant
 		
-		return builder.toString();
+		return builder.build();
 
 	}
 	// http://www.larousse.fr/dictionnaires/rechercher?q=tra%C3%AEna&l=francais-anglais&culture=

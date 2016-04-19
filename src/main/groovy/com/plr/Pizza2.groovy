@@ -1,20 +1,24 @@
 package com.plr
 
-import groovy.util.slurpersupport.NodeChild;
-import groovy.xml.XmlUtil
-import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.Method
+import groovy.util.slurpersupport.NodeChild
 
+import java.nio.charset.Charset
+
+import org.apache.http.HttpEntity
+import org.apache.http.HttpHeaders
+import org.apache.http.HttpResponse
+import org.apache.http.client.ClientProtocolException
+import org.apache.http.client.HttpClient
+import org.apache.http.client.ResponseHandler
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.entity.ContentType
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.impl.client.LaxRedirectStrategy
+import org.apache.http.util.EntityUtils
 import org.ccil.cowan.tagsoup.Parser
 
 class Pizza2 {
-	static void main(String[] args) {
 
-		def piz = new Pizza2()
-		piz.constructOutput("paper clip")
-		println "Pizza2"
-	}
 
 	final XmlSlurper PARSER
 
@@ -93,33 +97,58 @@ class Pizza2 {
 	}
 
 
-
-
 	String getData(String word, TransType type) {
-		def http = new HTTPBuilder()
+		URI uri = type.buildUrl(word)
+		getData(uri)
+	}
 
-		def url = type.buildUrl( word)
+	String getData(URI uri) {
+		HttpClient httpclient = HttpClientBuilder.create()
+				.setRedirectStrategy(new LaxRedirectStrategy()).build();
 
-		String ret = null
+		HttpGet request = new HttpGet(uri);
 
-		http.request( url, Method.GET, ContentType.TEXT ) { req ->
+		// add request header
+		request.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 Firefox/3.0.4");
+		request.addHeader(HttpHeaders.ACCEPT, "*/*")
 
-			//uri.path = '/groovy/examples/'
-			headers.'User-Agent' = "Mozilla/5.0 Firefox/3.0.4"
-			//headers.Accept = 'application/json'
+		//ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-			response.success = { resp, reader ->
-				assert resp.statusLine.statusCode == 200
-				println "Got response: ${resp.statusLine}"
-				println "Content-Type: ${resp.headers.'Content-Type'}"
 
-				ret = reader.text
-			}
+		ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
-			response.'404' = { println 'Not found' }
-		}
+					public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+						def status = response.getStatusLine().getStatusCode();
 
-		return ret
+						HttpEntity entity = response.getEntity();
+						ContentType contentType = null;
+						Charset charset = null;
+
+						if (entity) {
+							contentType = ContentType.get(entity);
+
+							String mimeType = contentType.getMimeType();
+
+							charset = contentType?.getCharset();
+						}
+
+						String mimeType = contentType?.getMimeType()
+
+						println "Got response: ${status}"
+						println "Content-Type: ${contentType}"
+						println "charset: ${charset}"
+						println "mimeType: ${mimeType}"
+
+						if (status >= 200 && status < 300) {
+							//HttpEntity entity = response.getEntity();
+							return entity != null ? EntityUtils.toString(entity) : null;
+						} else {
+							throw new ClientProtocolException("Unexpected response status: " + status);
+						}
+					}
+
+				};
+		String responseBody = httpclient.execute(request, responseHandler);
 	}
 
 	def cleanWord(String word) {
